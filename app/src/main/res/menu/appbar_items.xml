@@ -4,6 +4,15 @@
     <item
         android:id="@+id/action_add"
         android:icon="@mipmap/baseline_add_white_24"
-        android:title="test"
-        app:showAsAction="always"/>
+        android:title="add"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menu1"
+                android:title="Abrir Câmera"/>
+            <item
+                android:id="@+id/menu2"
+                android:title="Abrir Galeria"/>
+        </menu>
+    </item>
 </menu>

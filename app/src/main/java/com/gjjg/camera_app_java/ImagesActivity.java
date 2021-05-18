@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.SeekBar;
 
 import java.util.ArrayList;
@@ -35,10 +38,10 @@ public class ImagesActivity extends AppCompatActivity {
         testImageList.add(new Image("Cube frog", R.drawable.frog));
         testImageList.add(new Image("Square Jerry", R.drawable.jerry));
 
-        imagesView = (RecyclerView) findViewById(R.id.imagesView);
+        imagesView = findViewById(R.id.imagesView);
         imageAdapter = new ImageViewAdapter(this, testImageList);
 
-        gridSeekBar = (SeekBar) findViewById(R.id.gridSeekBar);
+        gridSeekBar = findViewById(R.id.gridSeekBar);
         gridSeekBar.setMax(2);
         gridSeekBar.setProgress(gridSize - 1);
 
@@ -66,5 +69,24 @@ public class ImagesActivity extends AppCompatActivity {
     private void UpdateGrid(int newGridSize) {
         gridSize = newGridSize;
         imagesView.setLayoutManager(new GridLayoutManager(this, gridSize));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.appbar_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.action_add:
+                Log.i("test", "CLICOU");
+                break;
+            default:
+                Log.i("test", "ue");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
