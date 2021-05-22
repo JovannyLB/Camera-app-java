@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -29,10 +30,11 @@ public class AlbumDatabase extends SQLiteOpenHelper {
             COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
                 COL_NAME + " TEXT, "+
                 COL_PHOTOS + " INTEGER);";*/
-        query = String.format("CREATE TABLE IF NOT EXISTS %s(" +
+        query = String.format(
+                "CREATE TABLE IF NOT EXISTS %s(" +
                 " %s INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 " %s TEXT, " +
-                " %s INTEGER)", DB_TABLE, COL_ID, COL_NAME, COL_PHOTOS);
+                " %s TEXT)", DB_TABLE, COL_ID, COL_NAME, COL_PHOTOS);
 
         sqLiteDatabase.execSQL(query);
     }
@@ -47,7 +49,7 @@ public class AlbumDatabase extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COL_NAME, album.getName());
-        values.put(COL_PHOTOS, album.getPhotos());
+        values.put(COL_PHOTOS, Util.convertListToString(album.getPhotosPaths()));
         long id = database.insert(DB_TABLE, null, values);
         database.close();
         return id;
@@ -63,9 +65,10 @@ public class AlbumDatabase extends SQLiteOpenHelper {
             do {
                 long id = cursor.getLong(cursor.getColumnIndex(COL_ID));
                 String name = cursor.getString(cursor.getColumnIndex(COL_NAME));
-                int population = cursor.getInt(cursor.getColumnIndex(COL_PHOTOS));
+                String photos = cursor.getString(cursor.getColumnIndex(COL_PHOTOS));
+                Log.i("AlbumDatabase", "" + photos);
 
-                Album c = new Album(id, name, population);
+                Album c = new Album(id, name, Util.convertStringToList(photos));
                 albums.add(c);
 
             } while (cursor.moveToNext());
@@ -84,7 +87,7 @@ public class AlbumDatabase extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COL_NAME, album.getName());
-        values.put(COL_PHOTOS, album.getPhotos());
+        values.put(COL_PHOTOS, Util.convertListToString(album.getPhotosPaths()));
         database.close();
     }
 }
