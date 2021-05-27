@@ -3,10 +3,14 @@ package com.gjjg.camera_app_java;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +27,13 @@ public class AlbumActivity extends AppCompatActivity {
     private RecyclerView albumsView;
     private AlbumViewAdapter albumAdapter;
 
+    public static final int CORE_PERMISSIONS = 1000;
+
+    private String[] PERMISSIONS = {
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        android.Manifest.permission.CAMERA
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +41,11 @@ public class AlbumActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Album List");
 
+        for (String permission : PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS, CORE_PERMISSIONS);
+            }
+        }
 
         DataModel.getInstance().setContext(this);
 

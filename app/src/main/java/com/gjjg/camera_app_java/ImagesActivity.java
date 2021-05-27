@@ -35,7 +35,6 @@ public class ImagesActivity extends AppCompatActivity {
 
     private SeekBar gridSeekBar;
 
-    private static final int ACCESS_CAMERA = 1000, SAVE_PHOTO = 1100;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +43,6 @@ public class ImagesActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(DataModel.getInstance().getAlbum().getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        if (ContextCompat.checkSelfPermission(ImagesActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImagesActivity.this, new String[] {Manifest.permission.CAMERA}, ACCESS_CAMERA);
-        }
-
-        if (ContextCompat.checkSelfPermission(ImagesActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImagesActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, SAVE_PHOTO);
-        }
 
         imagesView = findViewById(R.id.imagesView);
         getAlbumPhotos();
@@ -108,7 +99,7 @@ public class ImagesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
 
-        if(requestCode == ACCESS_CAMERA && resultCode == RESULT_OK){
+        if(requestCode == AlbumActivity.CORE_PERMISSIONS && resultCode == RESULT_OK){
             imageList.add(cameraImageUri.toString());
             ImageViewAdapter imageAdapter = new ImageViewAdapter(this, imageList);
             imagesView.setAdapter(imageAdapter);
@@ -152,7 +143,7 @@ public class ImagesActivity extends AppCompatActivity {
 
         Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         camera.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-        startActivityForResult(camera, ACCESS_CAMERA);
+        startActivityForResult(camera, AlbumActivity.CORE_PERMISSIONS);
     }
 
     private void GalleryButton(){
