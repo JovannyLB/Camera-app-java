@@ -48,8 +48,16 @@ public class AlbumDatabase extends SQLiteOpenHelper {
     public long createAlbumInDB(Album album) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
+        ///storage/emulated/0/Android/data/com.gjjg.camera_app_java/files/Pictures/JPEG_20210522_131720_3898662663182813283.jpg
+        ///storage/emulated/0/Android/data/com.gjjg.camera_app_java/files/Pictures/JPEG_20210522_131807_9025589401973945931.jpg
+        ArrayList<String> photosList = new ArrayList<String>();
+
+//        photosList.add("/storage/emulated/0/Android/data/com.gjjg.camera_app_java/files/Pictures/JPEG_20210522_131720_3898662663182813283.jpg");
+//        photosList.add("/storage/emulated/0/Android/data/com.gjjg.camera_app_java/files/Pictures/JPEG_20210522_131807_9025589401973945931.jpg");
+
         values.put(COL_NAME, album.getName());
-        values.put(COL_PHOTOS, Util.convertListToString(album.getPhotosPaths()));
+        values.put(COL_PHOTOS, Util.convertListToString(photosList));
+//        values.put(COL_PHOTOS, Util.convertListToString(album.getPhotosPaths()));
         long id = database.insert(DB_TABLE, null, values);
         database.close();
         return id;
@@ -68,7 +76,7 @@ public class AlbumDatabase extends SQLiteOpenHelper {
                 String photos = cursor.getString(cursor.getColumnIndex(COL_PHOTOS));
                 Log.i("AlbumDatabase", "" + photos);
 
-                Album c = new Album(id, name, Util.convertStringToList(photos));
+                Album c = new Album(id, name, photos);
                 albums.add(c);
 
             } while (cursor.moveToNext());
@@ -87,7 +95,8 @@ public class AlbumDatabase extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COL_NAME, album.getName());
-        values.put(COL_PHOTOS, Util.convertListToString(album.getPhotosPaths()));
+        values.put(COL_PHOTOS, album.getPhotos());
+        database.update(DB_TABLE, values, "ID =?", new String[]{String.valueOf(album.getId())});
         database.close();
     }
 }

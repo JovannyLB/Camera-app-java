@@ -9,22 +9,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.gjjg.camera_app_java.models.Album;
 import com.gjjg.camera_app_java.models.DataModel;
-import com.gjjg.camera_app_java.models.Image;
-import com.gjjg.camera_app_java.models.Util;
-
-import java.util.ArrayList;
 
 public class AlbumActivity extends AppCompatActivity {
-
-    private ArrayList<Album> testAlbumList;
 
     private RecyclerView albumsView;
     private AlbumViewAdapter albumAdapter;
@@ -38,18 +32,9 @@ public class AlbumActivity extends AppCompatActivity {
 
 
         DataModel.getInstance().setContext(this);
-//        testAlbumList = DataModel.getInstance().getAlbums();
-
-//        List<String> tste = new String[8];
-
-//        testAlbumList.add(new Album("Album Teste 1", ));
-//        testAlbumList.add(new Album("Album Teste 2"));
-//        testAlbumList.add(new Album("Album Teste 3"));
-//        testAlbumList.add(new Album("Album Teste 4"));
-//        testAlbumList.add(new Album("Album Teste 5"));
 
         albumsView = findViewById(R.id.albumsView);
-        albumAdapter = new AlbumViewAdapter(this/*, testAlbumList*/);
+        albumAdapter = new AlbumViewAdapter(this);
 
         albumsView.setAdapter(albumAdapter);
         albumsView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -87,7 +72,14 @@ public class AlbumActivity extends AppCompatActivity {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Create Album");
         alert.setView(layout);
-        alert.setPositiveButton("create", ((DialogInterface dialog, int which) -> createNewAlbum(edittext.getText().toString())
+
+        alert.setPositiveButton("create", ((DialogInterface dialog, int which) -> {
+            if(edittext.getText().length() > 0){
+                createNewAlbum(edittext.getText().toString());
+            } else {
+                Toast.makeText(this,"Insert a valid album name", Toast.LENGTH_LONG).show();
+            }
+        }
         ));
         alert.setNegativeButton("back", ((DialogInterface dialog, int which) -> {
         }));
@@ -95,9 +87,6 @@ public class AlbumActivity extends AppCompatActivity {
     }
 
     private void createNewAlbum(String name) {
-//        Log.i("create", "CREATE ALBUM " + name);
-        DataModel.getInstance().addAlbum(new Album(name, new ArrayList<Image>(0)));
-//        finish();
-//        startActivity(getIntent());
+        DataModel.getInstance().addAlbum(new Album(name, ""));
     }
 }

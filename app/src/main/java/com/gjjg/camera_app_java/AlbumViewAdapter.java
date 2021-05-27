@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +21,12 @@ import androidx.annotation.NonNull;
 import com.gjjg.camera_app_java.models.Album;
 import com.gjjg.camera_app_java.models.DataModel;
 
-import java.util.List;
-
 public class AlbumViewAdapter extends RecyclerView.Adapter<AlbumViewAdapter.ViewHolder> {
 
     private Context context;
-//    private List<Album> data;
 
-    public AlbumViewAdapter(Context context/*, List<Album> data*/) {
+    public AlbumViewAdapter(Context context) {
         this.context = context;
-//        this.data = data;
     }
 
     @NonNull
@@ -55,9 +50,8 @@ public class AlbumViewAdapter extends RecyclerView.Adapter<AlbumViewAdapter.View
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ImagesActivity.class);
-//                Log.e("errorororo", "" + album.getId());
-//                intent.putExtra("ALBUM_ID", album.getId());
                 DataModel.getInstance().setCurrentAlbumId(album.getId());
+                DataModel.getInstance().setCurrentAlbumIndex(position);
                 context.startActivity(intent);
             }
         });
@@ -65,7 +59,6 @@ public class AlbumViewAdapter extends RecyclerView.Adapter<AlbumViewAdapter.View
 
     public void removeItem(int position) {
         DataModel.getInstance().deleteAlbum(DataModel.getInstance().getAlbums().get(position), position);
-//        data.remove(position);
         notifyDataSetChanged();
     }
 
